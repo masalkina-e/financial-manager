@@ -1,4 +1,5 @@
-import Diagram from "components/Diagram"
+import Diagram from "components/Diagram";
+import classNames from "classnames"
 
 function Statictics ( {sortedExpenses, setCurrentCategory, currentCategory, summedAllExpenses} ) {
 
@@ -14,13 +15,19 @@ function Statictics ( {sortedExpenses, setCurrentCategory, currentCategory, summ
                             <div 
                             key={category.name} 
                             onClick={() => setCurrentCategory(category.name)} 
-                            className="cursor-pointer px-4 py-0.5 `${currentCategory === category.name ? 'bg-orange-500' : 'bg-white'}`"
+                            className={classNames(
+                                "cursor-pointer px-4 py-0.5",
+                                {"bg-orange-200 rounded-2xl": currentCategory === category.name}
+                            )}
                             >
                                 {category.name} - {category.value}
                             </div>
                         )
                     })}
-                    <div onClick={() => setCurrentCategory(summedAllExpenses.name)} className="cursor-pointer bg-slate-200 px-4 py-0.5 rounded-2xl">
+                    <div 
+                    onClick={() => setCurrentCategory(summedAllExpenses.name)} 
+                    className="cursor-pointer bg-slate-200 px-4 py-0.5 rounded-2xl"
+                    >
                         {summedAllExpenses.name} - {summedAllExpenses.value}
                     </div>
                 </div>

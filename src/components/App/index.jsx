@@ -40,22 +40,25 @@ function App() {
     ]
   )
 
+
   useEffect(() => {
-    localStorage.setItem('расходы', JSON.stringify(expenses))
+    localStorage.setItem('expenses', JSON.stringify(expenses))
   }, [expenses])
 
   useEffect(() => {
-    const savedExpenses = localStorage.getItem('расходы')
-    if (savedExpenses) {
-      const expenses = JSON.parse(savedExpenses)
-      setExpenses(expenses)
+    const expensesJson = localStorage.getItem('expenses')
+    console.log(expensesJson)
+    
+    if (expensesJson) {
+      setExpenses(JSON.parse(expensesJson))
     }
+    
   }, [])
-
+  
   const allCategories = ["Продукты", "Развлечения", "Шопинг", "Путешествия", "Рестораны"]
 
   const [currentCategory, setCurrentCategory] = useState("Все расходы")
-  console.log(currentCategory)
+  // console.log(currentCategory)
 
   function sortCategories() {
     const filteredTravel = expenses.filter((expense) => expense.name === "Путешествия")
@@ -131,7 +134,7 @@ function App() {
     return allExpenses
   }
   const summedAllExpenses = sumAllExpenses() 
-  console.log(summedAllExpenses)
+  // console.log(summedAllExpenses)
   
   function addNewExpense(newExpense) {
     const newExpenses = [...expenses, newExpense]

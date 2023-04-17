@@ -8,7 +8,6 @@ function Header( {addNewExpense, allCategories} ) {
     const [newText, setNewText] = useState(allCategories[0])
     let currentDate = new Date()
     currentDate = format(new Date(currentDate),'dd MMMM yyyy',{ locale: ru })
-    // console.log(currentDate)
     
     function onClick(event) {
         event.preventDefault()
@@ -18,8 +17,8 @@ function Header( {addNewExpense, allCategories} ) {
             name: newText,
             value: parseInt(newValue)
         }
-        console.log(newExpense)
         addNewExpense(newExpense)
+        setNewValue('')
     }
 
     return (

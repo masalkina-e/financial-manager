@@ -1,6 +1,5 @@
 import { Cell, Pie, PieChart } from "recharts";
 
-
 function Diagram( {sortedExpenses} ) {  
     const data = sortedExpenses
     const colors = ['#7caaf6', '#95e7ae', '#f8e95d', '#f6cf5a', '#f784ab'];

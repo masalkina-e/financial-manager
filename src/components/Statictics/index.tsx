@@ -1,10 +1,10 @@
 import Diagram from "components/Diagram";
 import classNames from "classnames"
-import sortedExpensesType from 'components/App'
-import SummedAllExpensesType from 'components/App'
+import { SortedExpensesType } from 'components/App'
+import { SummedAllExpensesType } from 'components/App'
 
 type Props = {
-    sortedExpenses: sortedExpensesType[]
+    sortedExpenses: SortedExpensesType[]
     setCurrentCategory: (currentCategory: string) => void
     currentCategory: string
     summedAllExpenses: SummedAllExpensesType

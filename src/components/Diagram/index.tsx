@@ -1,15 +1,25 @@
 import { Cell, Pie, PieChart } from "recharts";
-import sortedExpensesType from 'components/App'
+import { SortedExpensesType } from 'components/App'
 
 type Props = {
-    sortedExpenses:sortedExpensesType
+    sortedExpenses: SortedExpensesType[]
+}
+
+type ItemDiagramType = {
+    cx: number
+    cy: number
+    midAngle: number
+    innerRadius: number
+    outerRadius: number
+    percent: number
+    index: number
 }
 
 function Diagram( {sortedExpenses}: Props ) {  
     const data = sortedExpenses
     const colors = ['#7caaf6', '#95e7ae', '#f8e95d', '#f6cf5a', '#f784ab'];
     const RADIAN = Math.PI / 180;
-    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: ItemDiagramType) => {
         const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
         const x = cx + radius * Math.cos(-midAngle * RADIAN);
         const y = cy + radius * Math.sin(-midAngle * RADIAN);

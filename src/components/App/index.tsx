@@ -21,54 +21,47 @@ export type SummedAllExpensesType = {
 }
 
 function App() {
+  
+  const defaultExpenses = [
+    {
+      date: '01 апреля 2023',
+      name: 'Продукты',
+      value: 3000
+    },
+    {
+      date: '01 апреля 2023',
+      name: 'Развлечения',
+      value: 10000,
+    },
+    {
+      date: '05 апреля 2023',
+      name: 'Шопинг',
+      value: 12000
+    },
+    {
+      date: '09 апреля 2023',
+      name: 'Рестораны',
+      value: 8000
+    },
+    {
+      date: '11 апреля 2023',
+      name: "Путешествия",
+      value: 37000
+    },
+    {
+      date: '11 апреля 2023',
+      name: "Путешествия",
+      value: 25000
+    } 
+  ]
+
   const [expenses, setExpenses] = useState<ExpenseType[]>(
-    [
-      {
-        date: '01 апреля 2023',
-        name: 'Продукты',
-        value: 3000
-      },
-      {
-        date: '01 апреля 2023',
-        name: 'Развлечения',
-        value: 10000,
-      },
-      {
-        date: '05 апреля 2023',
-        name: 'Шопинг',
-        value: 12000
-      },
-      {
-        date: '09 апреля 2023',
-        name: 'Рестораны',
-        value: 8000
-      },
-      {
-        date: '11 апреля 2023',
-        name: "Путешествия",
-        value: 37000
-      },
-      {
-        date: '11 апреля 2023',
-        name: "Путешествия",
-        value: 25000
-      } 
-    ]
+    localStorage.getItem('expenses') ? JSON.parse(localStorage.getItem('expenses')!) : defaultExpenses
   )
 
   useEffect(() => {
     localStorage.setItem('expenses', JSON.stringify(expenses))
   }, [expenses])
-
-  useEffect(() => {
-    const expensesJson = localStorage.getItem('expenses')
-    console.log(expensesJson)
-    
-    if (expensesJson) {
-      setExpenses(JSON.parse(expensesJson))
-    }
-    
-  }, [])
   
   const allCategories = ["Продукты", "Развлечения", "Шопинг", "Путешествия", "Рестораны"]
 

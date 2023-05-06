@@ -1,4 +1,4 @@
-import ExpenseType from 'components/App'
+import { ExpenseType } from 'components/App'
 
 type Props = {
     expenses: ExpenseType[]

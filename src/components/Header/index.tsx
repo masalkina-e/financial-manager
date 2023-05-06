@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react"
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
-import ExpenseType from 'components/App'
+import { ExpenseType } from 'components/App'
 
 type Props = {
     addNewExpense: (newExpense:ExpenseType) => void
@@ -12,8 +12,7 @@ function Header( {addNewExpense, allCategories}: Props ) {
 
     const [newValue, setNewValue] = useState<number>(0)
     const [newText, setNewText] = useState<string>(allCategories[0])
-    let currentDate = new Date()
-    currentDate = format(new Date(currentDate),'dd MMMM yyyy',{ locale: ru })
+    let currentDate:string = format(new Date,'dd MMMM yyyy',{ locale: ru })
     
     function onClick(event: FormEvent) {
         event.preventDefault()

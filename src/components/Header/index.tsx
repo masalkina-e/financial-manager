@@ -1,24 +1,30 @@
-import { useState } from "react"
+import { FormEvent, useState } from "react"
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import ExpenseType from 'components/App'
 
-function Header( {addNewExpense, allCategories} ) {
+type Props = {
+    addNewExpense: (newExpense:ExpenseType) => void
+    allCategories: string[]
+} 
 
-    const [newValue, setNewValue] = useState('')
-    const [newText, setNewText] = useState(allCategories[0])
+function Header( {addNewExpense, allCategories}: Props ) {
+
+    const [newValue, setNewValue] = useState<number>(0)
+    const [newText, setNewText] = useState<string>(allCategories[0])
     let currentDate = new Date()
     currentDate = format(new Date(currentDate),'dd MMMM yyyy',{ locale: ru })
     
-    function onClick(event) {
+    function onClick(event: FormEvent) {
         event.preventDefault()
 
         const newExpense = {
             date: currentDate,
             name: newText,
-            value: parseInt(newValue)
+            value: newValue
         }
         addNewExpense(newExpense)
-        setNewValue('')
+        setNewValue(0)
     }
 
     return (
@@ -26,7 +32,7 @@ function Header( {addNewExpense, allCategories} ) {
             <h1 className="py-20 text-4xl font-semibold text-center">Учет расходов</h1>
             <form className="flex flex-row justify-evenly items-center gap-1.5 pb-20 sm:justify-center gap-5">
                 <input 
-                    onChange={(event) => setNewValue(event.target.value)}
+                    onChange={(event) => setNewValue(parseInt(event.target.value))}
                     value={newValue}
                     name="newValue"
                     className="w-1/4 border border-solid border-slate-300 outline-indigo-500 outline-1 rounded-lg py-1.5 px-2.5" 
@@ -40,7 +46,7 @@ function Header( {addNewExpense, allCategories} ) {
                     name="newText"
                     className="w-1/4 border border-solid border-slate-300 outline-indigo-500 outline-1 rounded-lg py-1.5 px-2.5"
                 >
-                    {allCategories.map((category) => {
+                    {allCategories.map((category:string) => {
                         return (
                             <option key={category}>{category}</option>
                         )

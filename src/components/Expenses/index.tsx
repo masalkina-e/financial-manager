@@ -1,4 +1,11 @@
-function Expenses( {expenses, currentCategory} ) {
+import ExpenseType from 'components/App'
+
+type Props = {
+    expenses: ExpenseType[]
+    currentCategory: string
+}
+
+function Expenses( {expenses, currentCategory}: Props ) {
 
     if (currentCategory === "Все расходы") {
         return (

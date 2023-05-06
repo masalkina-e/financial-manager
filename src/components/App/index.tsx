@@ -4,8 +4,24 @@ import Header from 'components/Header';
 import Statictics from 'components/Statictics';
 import { useEffect, useState } from 'react';
 
+export type ExpenseType = {
+  date: string
+  name: string
+  value: number
+}
+
+export type SortedExpensesType = {
+  name: string
+  value: number 
+} 
+
+export type SummedAllExpensesType = {
+  name: string
+  value: number 
+}
+
 function App() {
-  const [expenses, setExpenses] = useState(
+  const [expenses, setExpenses] = useState<ExpenseType[]>(
     [
       {
         date: '01 апреля 2023',
@@ -40,7 +56,6 @@ function App() {
     ]
   )
 
-
   useEffect(() => {
     localStorage.setItem('expenses', JSON.stringify(expenses))
   }, [expenses])
@@ -57,8 +72,7 @@ function App() {
   
   const allCategories = ["Продукты", "Развлечения", "Шопинг", "Путешествия", "Рестораны"]
 
-  const [currentCategory, setCurrentCategory] = useState("Все расходы")
-  // console.log(currentCategory)
+  const [currentCategory, setCurrentCategory] = useState<string>("Все расходы")
 
   function sortCategories() {
     const filteredTravel = expenses.filter((expense) => expense.name === "Путешествия")
@@ -134,9 +148,8 @@ function App() {
     return allExpenses
   }
   const summedAllExpenses = sumAllExpenses() 
-  // console.log(summedAllExpenses)
   
-  function addNewExpense(newExpense) {
+  function addNewExpense(newExpense:ExpenseType) {
     const newExpenses = [...expenses, newExpense]
     setExpenses(newExpenses)
   }

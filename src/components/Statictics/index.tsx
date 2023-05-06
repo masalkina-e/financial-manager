@@ -1,7 +1,16 @@
 import Diagram from "components/Diagram";
 import classNames from "classnames"
+import sortedExpensesType from 'components/App'
+import SummedAllExpensesType from 'components/App'
 
-function Statictics ( {sortedExpenses, setCurrentCategory, currentCategory, summedAllExpenses} ) {
+type Props = {
+    sortedExpenses: sortedExpensesType[]
+    setCurrentCategory: (currentCategory: string) => void
+    currentCategory: string
+    summedAllExpenses: SummedAllExpensesType
+}
+
+function Statictics ( {sortedExpenses, setCurrentCategory, currentCategory, summedAllExpenses}: Props ) {
 
     return (
         <div className="flex flex-col sm:flex-row">

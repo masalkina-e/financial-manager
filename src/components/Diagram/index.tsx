@@ -1,6 +1,11 @@
 import { Cell, Pie, PieChart } from "recharts";
+import sortedExpensesType from 'components/App'
 
-function Diagram( {sortedExpenses} ) {  
+type Props = {
+    sortedExpenses:sortedExpensesType
+}
+
+function Diagram( {sortedExpenses}: Props ) {  
     const data = sortedExpenses
     const colors = ['#7caaf6', '#95e7ae', '#f8e95d', '#f6cf5a', '#f784ab'];
     const RADIAN = Math.PI / 180;

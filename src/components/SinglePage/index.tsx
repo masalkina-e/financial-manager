@@ -1,38 +1,27 @@
 import Statictics from "components/Statictics"
-import { useEffect, useState } from "react"
 import FormExpenses from "components/FormExpenses"
 import FormIncomes from "components/FormIncomes"
-import { TabType, TabTypes } from "components/App"
 import List from "components/List"
+import Balance from "components/Balance"
+import ListBalance from "components/ListBalance"
+import Diagram from "components/Diagram"
 
-export type ExpenseType = {
-    date: string
+import { TabType, TabTypes } from "components/App"
+import { sortCategories, sumAllCategories } from "scripts/scripts"
+import { useEffect, useState } from "react"
+
+export type ItemsType = {
+    date: Date
     name: string
     value: number
 }
 
-export type IncomesType = {
-    date: string
+export type SortedItemsType = {
     name: string
     value: number
 }
 
-export type SortedExpensesType = {
-    name: string
-    value: number
-}
-
-export type SummedAllExpensesType = {
-    name: string
-    value: number
-}
-
-export type SortedIncomesType = {
-    name: string
-    value: number
-}
-
-export type SummedAllIncomesType = {
+export type SummedAllItemsType = {
     name: string
     value: number
 }
@@ -42,7 +31,7 @@ type Props = {
 }
 
 function SinglePage({ currentPage }: Props) {
-    const defaultExpenses = [
+    const defaultExpenses: ItemsType[] = [
         {
             date: "01 апреля 2023",
             name: "Продукты",
@@ -75,7 +64,7 @@ function SinglePage({ currentPage }: Props) {
         }
     ]
 
-    const [incomes, setIncomes] = useState<IncomesType[]>([
+    const [incomes, setIncomes] = useState<ItemsType[]>([
         {
             date: "20 июня 2023",
             name: "Зарплата",
@@ -85,31 +74,10 @@ function SinglePage({ currentPage }: Props) {
             date: "20 июля 2023",
             name: "Зарплата",
             value: 70000
-        },
-        {
-            date: "30 июля 2023",
-            name: "Пособие",
-            value: 1000
-        },
-        {
-            date: "30 июля 2023",
-            name: "Кэшбэк",
-            value: 1000
-        },
-        {
-            date: "30 июля 2023",
-            name: "Аренда",
-            value: 1000
-        },
-        {
-            date: "30 июля 2023",
-            name: "Прочие доходы",
-            value: 1000
         }
     ])
-    console.log(incomes)
 
-    const [expenses, setExpenses] = useState<ExpenseType[]>(
+    const [expenses, setExpenses] = useState<ItemsType[]>(
         localStorage.getItem("expenses")
             ? JSON.parse(localStorage.getItem("expenses")!)
             : defaultExpenses
@@ -119,7 +87,7 @@ function SinglePage({ currentPage }: Props) {
         localStorage.setItem("expenses", JSON.stringify(expenses))
     }, [expenses])
 
-    const allCategories = [
+    const allCategoriesExpenses = [
         "Продукты",
         "Развлечения",
         "Шопинг",
@@ -134,111 +102,93 @@ function SinglePage({ currentPage }: Props) {
         "Прочие доходы"
     ]
 
-    function sortCategories() {
-        const i = allCategories.map((category) => {
-            const filteredCategory = expenses.filter(
-                (expense) => expense.name === category
-            )
-            console.log(filteredCategory)
-            const filteredValue = filteredCategory.map((value) => value.value)
-            let sum = filteredValue.reduce((a, b) => a + b)
-            const sortedCategory = {
-                name: category,
-                value: sum
-            }
-            return sortedCategory
-        })
-        return i
-    }
-    const sortedExpenses = sortCategories()
+    const sortedExpenses = sortCategories({
+        categories: allCategoriesExpenses,
+        items: expenses
+    })
+    const sortedIncomes = sortCategories({
+        categories: allCategoriesIncomes,
+        items: incomes
+    })
 
-    function sortIncomesCategories() {
-        const i = allCategoriesIncomes.map((category) => {
-            const filteredCategory = incomes.filter(
-                (income) => income.name === category
-            )
-            console.log(filteredCategory)
-            const filteredValue = filteredCategory.map((value) => value.value)
-            let sum = filteredValue.reduce((a, b) => a + b)
-            const sortedCategory = {
-                name: category,
-                value: sum
-            }
-            return sortedCategory
-        })
-        return i
-    }
-    const sortedIncomes = sortIncomesCategories()
-
-    const [currentCategory, setCurrentCategory] =
-        useState<string>("Все расходы")
+    const [currentExpenseCategory, setCurrentExpenseCategory] =
+        useState<string>("Итого")
     const [currentIncomesCategory, setCurrentIncomesCategory] =
-        useState<string>("Все доходы")
+        useState<string>("Итого")
 
-    function sumAllExpenses() {
-        const allValueExpenses = expenses.map((expense) => expense.value)
-        let sumAll = allValueExpenses.reduce((a, b) => a + b)
-        const allExpenses = {
-            name: "Все расходы",
-            value: sumAll
-        }
-        return allExpenses
-    }
-    const summedAllExpenses = sumAllExpenses()
+    const summedAllExpenses = sumAllCategories(expenses)
+    const summedAllIncomes = sumAllCategories(incomes)
 
-    function sumAllIncomes() {
-        const allValueIncomes = incomes.map((income) => income.value)
-        let sumAll = allValueIncomes.reduce((a, b) => a + b)
-        const allIncomes = {
-            name: "Все доходы",
-            value: sumAll
-        }
-        return allIncomes
-    }
-    const summedAllIncomes = sumAllIncomes()
-
-    function addNewExpense(newExpense: ExpenseType) {
+    function addNewExpense(newExpense: ItemsType) {
         const newExpenses = [...expenses, newExpense]
         setExpenses(newExpenses)
     }
 
-    function addNewIncomes(newIncome: IncomesType) {
+    function addNewIncomes(newIncome: ItemsType) {
         const newIncomes = [...incomes, newIncome]
         setIncomes(newIncomes)
     }
 
+    const items = expenses.concat(incomes)
+
     return (
         <div>
             {currentPage === TabTypes.expenses && (
-                <FormExpenses
-                    allCategories={allCategories}
-                    addNewExpense={addNewExpense}
-                />
+                <div>
+                    <FormExpenses
+                        allCategories={allCategoriesExpenses}
+                        addNewExpense={addNewExpense}
+                    />
+                    <div className="flex flex-col sm:flex-row">
+                        <div className="w-1/2 flex flex-row justify-center m-auto sm:m-0">
+                            <Diagram sortedCategories={sortedExpenses} />
+                        </div>
+                        <Statictics
+                            sortedCategories={sortedExpenses}
+                            summedAllCategories={summedAllExpenses}
+                            setCurrentCategory={setCurrentExpenseCategory}
+                            currentCategory={currentExpenseCategory}
+                        />
+                    </div>
+
+                    <List
+                        values={expenses}
+                        currentCategory={currentExpenseCategory}
+                    />
+                </div>
             )}
             {currentPage === TabTypes.incomes && (
-                <FormIncomes
-                    allCategoriesIncomes={allCategoriesIncomes}
-                    addNewIncomes={addNewIncomes}
-                />
+                <div>
+                    <FormIncomes
+                        allCategoriesIncomes={allCategoriesIncomes}
+                        addNewIncomes={addNewIncomes}
+                    />
+                    <div className="flex flex-col sm:flex-row">
+                        <div className="w-1/2 flex flex-row justify-center m-auto sm:m-0">
+                            <Diagram sortedCategories={sortedIncomes} />
+                        </div>
+                        <Statictics
+                            sortedCategories={sortedIncomes}
+                            summedAllCategories={summedAllIncomes}
+                            setCurrentCategory={setCurrentIncomesCategory}
+                            currentCategory={currentIncomesCategory}
+                        />
+                    </div>
+                    <List
+                        values={incomes}
+                        currentCategory={currentIncomesCategory}
+                    />
+                </div>
             )}
-            <Statictics
-                sortedExpenses={sortedExpenses}
-                setCurrentCategory={setCurrentCategory}
-                currentCategory={currentCategory}
-                summedAllExpenses={summedAllExpenses}
-                currentPage={currentPage}
-                sortedIncomes={sortedIncomes}
-                currentIncomesCategory={currentIncomesCategory}
-                setCurrentIncomesCategory={setCurrentIncomesCategory}
-                summedAllIncomes={summedAllIncomes}
-            />
-            <List
-                expenses={expenses}
-                currentCategory={currentCategory}
-                incomes={incomes}
-                currentIncomesCategory={currentIncomesCategory}
-                currentPage={currentPage}
-            />
+            {currentPage === TabTypes.balance && (
+                <div>
+                    <Balance
+                        summedAllExpenses={summedAllExpenses}
+                        summedAllIncomes={summedAllIncomes}
+                    />
+                    <ListBalance items={items} />
+                </div>
+            )}
         </div>
     )
 }

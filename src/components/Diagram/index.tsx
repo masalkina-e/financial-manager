@@ -1,8 +1,8 @@
 import { Cell, Pie, PieChart } from "recharts"
-import { SortedExpensesType } from "components/SinglePage"
+import { SortedItemsType } from "components/SinglePage"
 
 type Props = {
-    sortedExpenses: SortedExpensesType[]
+    sortedCategories: SortedItemsType[]
 }
 
 type ItemDiagramType = {
@@ -15,8 +15,8 @@ type ItemDiagramType = {
     index: number
 }
 
-function DiagramExpenses({ sortedExpenses }: Props) {
-    const data = sortedExpenses
+function DiagramExpenses({ sortedCategories }: Props) {
+    const data = sortedCategories
     const colors = ["#7caaf6", "#95e7ae", "#f8e95d", "#f6cf5a", "#f784ab"]
     const RADIAN = Math.PI / 180
     const renderCustomizedLabel = ({

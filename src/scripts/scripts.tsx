@@ -8,7 +8,6 @@ type ArmsType = {
 export function sortCategories({ categories, items }: ArmsType) {
     const i = categories.map((category) => {
         const filteredCategory = items.filter((item) => item.name === category)
-        // console.log(filteredCategory)
         const filteredValue = filteredCategory.map((value) => value.value)
         let sum = filteredValue.reduce((a, b) => a + b, 0)
         const sortedCategory = {

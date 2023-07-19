@@ -1,11 +1,14 @@
 import { ItemsType } from "components/SinglePage"
+import { format } from "date-fns"
+import { ru } from "date-fns/locale"
 
 type Props = {
     values: ItemsType[]
     currentCategory: string
+    sing: string
 }
 
-function List({ values, currentCategory }: Props) {
+function List({ values, currentCategory, sing }: Props) {
     if (currentCategory === "Итого") {
         return (
             <div className="flex flex-col w-full py-10">
@@ -17,12 +20,17 @@ function List({ values, currentCategory }: Props) {
                         >
                             <div className="w-1/2 flex flex-col gap-1">
                                 <div className="text-xs bg-blue-100 text-blue-500 w-28 text-center rounded-xl">
-                                    {value.date}
+                                    {format(
+                                        new Date(value.date),
+                                        "dd MMMM yyyy",
+                                        { locale: ru }
+                                    )}
                                 </div>
                                 <div>{value.name}</div>
                             </div>
                             <div className="w-1/2 flex justify-end items-end">
-                                - {value.value} ₽
+                                {sing}
+                                {value.value} ₽
                             </div>
                         </div>
                     )
@@ -43,7 +51,11 @@ function List({ values, currentCategory }: Props) {
                         >
                             <div className="w-1/2">
                                 <div className="text-xs bg-blue-100 text-blue-500 w-28 text-center rounded-xl">
-                                    {value.date}
+                                    {format(
+                                        new Date(value.date),
+                                        "dd MMMM yyyy",
+                                        { locale: ru }
+                                    )}
                                 </div>
                                 <div>{value.name}</div>
                             </div>

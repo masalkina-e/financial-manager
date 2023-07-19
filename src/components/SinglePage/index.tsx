@@ -1,6 +1,5 @@
 import Statictics from "components/Statictics"
-import FormExpenses from "components/FormExpenses"
-import FormIncomes from "components/FormIncomes"
+import Form from "components/Form"
 import List from "components/List"
 import Balance from "components/Balance"
 import ListBalance from "components/ListBalance"
@@ -33,49 +32,49 @@ type Props = {
 function SinglePage({ currentPage }: Props) {
     const defaultExpenses: ItemsType[] = [
         {
-            date: "01 апреля 2023",
+            date: new Date(2023, 4, 1),
             name: "Продукты",
             value: 3000
         },
         {
-            date: "01 апреля 2023",
+            date: new Date(2023, 4, 1),
             name: "Развлечения",
             value: 10000
         },
         {
-            date: "05 апреля 2023",
+            date: new Date(2023, 4, 5),
             name: "Шопинг",
             value: 12000
         },
         {
-            date: "09 апреля 2023",
+            date: new Date(2023, 4, 7),
             name: "Рестораны",
             value: 8000
         },
         {
-            date: "11 апреля 2023",
+            date: new Date(2023, 4, 11),
             name: "Путешествия",
             value: 23000
         },
         {
-            date: "11 апреля 2023",
+            date: new Date(2023, 4, 11),
             name: "Путешествия",
             value: 32000
         }
     ]
 
-    const [incomes, setIncomes] = useState<ItemsType[]>([
+    const defaultIncomes: ItemsType[] = [
         {
-            date: "20 июня 2023",
+            date: new Date(2023, 5, 20),
             name: "Зарплата",
             value: 70000
         },
         {
-            date: "20 июля 2023",
+            date: new Date(2023, 6, 20),
             name: "Зарплата",
             value: 70000
         }
-    ])
+    ]
 
     const [expenses, setExpenses] = useState<ItemsType[]>(
         localStorage.getItem("expenses")
@@ -86,6 +85,16 @@ function SinglePage({ currentPage }: Props) {
     useEffect(() => {
         localStorage.setItem("expenses", JSON.stringify(expenses))
     }, [expenses])
+
+    const [incomes, setIncomes] = useState<ItemsType[]>(
+        localStorage.getItem("incomes")
+            ? JSON.parse(localStorage.getItem("incomes")!)
+            : defaultIncomes
+    )
+
+    useEffect(() => {
+        localStorage.setItem("incomes", JSON.stringify(incomes))
+    }, [incomes])
 
     const allCategoriesExpenses = [
         "Продукты",
@@ -119,14 +128,32 @@ function SinglePage({ currentPage }: Props) {
     const summedAllExpenses = sumAllCategories(expenses)
     const summedAllIncomes = sumAllCategories(incomes)
 
-    function addNewExpense(newExpense: ItemsType) {
-        const newExpenses = [...expenses, newExpense]
-        setExpenses(newExpenses)
+    function addNewExpense(newValue: number, newText: string, startDate: Date) {
+        if (newValue === 0) {
+            alert("Введите число больше 0")
+        } else {
+            const newExpense: ItemsType = {
+                date: startDate,
+                name: newText,
+                value: newValue
+            }
+            const newExpenses = [...expenses, newExpense]
+            setExpenses(newExpenses)
+        }
     }
 
-    function addNewIncomes(newIncome: ItemsType) {
-        const newIncomes = [...incomes, newIncome]
-        setIncomes(newIncomes)
+    function addNewIncomes(newValue: number, newText: string, startDate: Date) {
+        if (newValue === 0) {
+            alert("Введите число больше 0")
+        } else {
+            const newIncome: ItemsType = {
+                date: startDate,
+                name: newText,
+                value: newValue
+            }
+            const newIncomes = [...incomes, newIncome]
+            setIncomes(newIncomes)
+        }
     }
 
     const items = expenses.concat(incomes)
@@ -135,9 +162,9 @@ function SinglePage({ currentPage }: Props) {
         <div>
             {currentPage === TabTypes.expenses && (
                 <div>
-                    <FormExpenses
+                    <Form
                         allCategories={allCategoriesExpenses}
-                        addNewExpense={addNewExpense}
+                        onSubmit={addNewExpense}
                     />
                     <div className="flex flex-col sm:flex-row">
                         <div className="w-1/2 flex flex-row justify-center m-auto sm:m-0">
@@ -154,14 +181,15 @@ function SinglePage({ currentPage }: Props) {
                     <List
                         values={expenses}
                         currentCategory={currentExpenseCategory}
+                        sing="- "
                     />
                 </div>
             )}
             {currentPage === TabTypes.incomes && (
                 <div>
-                    <FormIncomes
-                        allCategoriesIncomes={allCategoriesIncomes}
-                        addNewIncomes={addNewIncomes}
+                    <Form
+                        allCategories={allCategoriesIncomes}
+                        onSubmit={addNewIncomes}
                     />
                     <div className="flex flex-col sm:flex-row">
                         <div className="w-1/2 flex flex-row justify-center m-auto sm:m-0">
@@ -177,6 +205,7 @@ function SinglePage({ currentPage }: Props) {
                     <List
                         values={incomes}
                         currentCategory={currentIncomesCategory}
+                        sing="+ "
                     />
                 </div>
             )}

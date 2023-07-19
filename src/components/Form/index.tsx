@@ -1,37 +1,24 @@
 import { FormEvent, useState } from "react"
-import { format } from "date-fns"
 import { ru } from "date-fns/locale"
-import { ItemsType } from "components/SinglePage"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { registerLocale, setDefaultLocale } from "react-datepicker"
+import { registerLocale } from "react-datepicker"
 registerLocale("ru", ru)
 
 type Props = {
-    addNewExpense: (newExpense: ItemsType) => void
     allCategories: string[]
+    onSubmit: (newValue: number, newText: string, startDate: Date) => void
 }
 
-function FormExpenses({ addNewExpense, allCategories }: Props) {
+function Form({ allCategories, onSubmit }: Props) {
     const [newValue, setNewValue] = useState<number>(0)
     const [newText, setNewText] = useState<string>(allCategories[0])
     const [startDate, setStartDate] = useState(new Date())
-    let currentDate: Date = format(startDate, "dd MMMM yyyy", { locale: ru })
 
     function onClick(event: FormEvent) {
         event.preventDefault()
-
-        if (newValue === 0) {
-            alert("Введите число больше 0")
-        } else {
-            const newExpense: ItemsType = {
-                date: currentDate,
-                name: newText,
-                value: newValue
-            }
-            addNewExpense(newExpense)
-            setNewValue(0)
-        }
+        onSubmit(newValue, newText, startDate)
+        setNewValue(0)
     }
 
     return (
@@ -57,6 +44,7 @@ function FormExpenses({ addNewExpense, allCategories }: Props) {
             </select>
 
             <DatePicker
+                dateFormat="dd/MM/yyyy"
                 className="w-full border border-solid border-slate-300 outline-indigo-500 outline-1 rounded-lg py-1.5 px-2.5"
                 selected={startDate}
                 onChange={(date: Date) => setStartDate(date)}
@@ -73,4 +61,4 @@ function FormExpenses({ addNewExpense, allCategories }: Props) {
         </form>
     )
 }
-export default FormExpenses
+export default Form

@@ -1,4 +1,6 @@
 import { ItemsType } from "components/SinglePage"
+import { format } from "date-fns"
+import { ru } from "date-fns/locale"
 
 type Props = {
     items: ItemsType[]
@@ -15,7 +17,9 @@ function ListBalance({ items }: Props) {
                     >
                         <div className="w-1/2 flex flex-col gap-1">
                             <div className="text-xs bg-blue-100 text-blue-500 w-28 text-center rounded-xl">
-                                {item.date}
+                                {format(new Date(item.date), "dd MMMM yyyy", {
+                                    locale: ru
+                                })}
                             </div>
                             <div>{item.name}</div>
                         </div>
